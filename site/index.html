@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ÖZLEDİMM</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Arial}
+body{height:100vh;background:black;overflow:hidden;color:white}
+
+/* FOTO */
+.photo{transition:transform .45s ease,opacity .35s ease}
+.photo.enter{transform:translateX(80px) scale(.96);opacity:0}
+.photo.active{transform:translateX(0) scale(1);opacity:1}
+.photo.exit{transform:translateX(-60px) scale(.98);opacity:0}
+
+/* BG */
+.bg{
+ position:fixed;inset:0;
+ background-size:cover;background-position:center;
+ filter:blur(30px) brightness(.55);
+ transform:scale(1.2);z-index:-1;
+ transition:filter 2s ease;
+}
+
+/* CONTAINER */
+.container{
+ height:100vh;display:flex;flex-direction:column;
+ justify-content:center;align-items:center;
+ text-align:center;padding:20px
+}
+
+.intro,.final{max-width:520px;font-size:20px;line-height:1.7}
+
+/* FOTO */
+.photo{
+ width:90%;max-width:420px;aspect-ratio:3/4;
+ border-radius:22px;
+ background-size:cover;background-position:center;
+ box-shadow:0 25px 50px rgba(0,0,0,.7)
+}
+
+.caption{margin-top:18px;font-size:18px;opacity:.9}
+
+/* BUTONLAR */
+.choiceBox{margin-top:32px;display:flex;gap:18px}
+.choiceBtn{
+ padding:14px 32px;border-radius:30px;
+ border:1px solid rgba(255,255,255,.6);
+ background:transparent;color:white;
+ font-size:16px;cursor:pointer;
+ transition:.4s ease;
+}
+.choiceBtn:hover{transform:scale(1.05)}
+.choiceBtn.yes{background:white;color:black;border-color:white}
+
+/* MESAJ */
+.choiceNote{
+ margin-top:26px;font-size:18px;
+ opacity:0;transition:opacity .8s ease;
+ max-width:520px;
+}
+
+/* SİYAH PERDE */
+#overlay{
+ position:fixed;inset:0;
+ background:black;
+ display:flex;flex-direction:column;
+ align-items:center;justify-content:center;
+ text-align:center;
+ opacity:0;
+ z-index:9999;
+ pointer-events:none;
+ transition:opacity 3s ease;
+}
+
+#overlay .bigDate{
+ font-size:40px;
+ letter-spacing:6px;
+ margin-bottom:24px;
+}
+
+#overlay .bigText{
+ font-size:30px;
+ letter-spacing:2px;
+}
+
+/* SON TARİH */
+.endDate{
+ margin-top:40px;
+ font-size:13px;
+ opacity:.45;
+ letter-spacing:2px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg" id="bg"></div>
+
+<!-- AÇILIŞ -->
+<div class="container" id="intro">
+ <div class="intro">
+  Bazı şeyler zamanında söylenmediğinde<br>
+  insanın içinde ağırlaşıyor.<br><br>
+  Bu bir pişmanlık değil…<br>
+  bir fark ediş.
+ </div>
+</div>
+
+<!-- GALERİ -->
+<div class="container" id="gallery" style="display:none">
+ <div class="photo" id="photo"></div>
+ <div class="caption" id="caption"></div>
+</div>
+
+<!-- FİNAL -->
+<div class="container" id="final" style="display:none">
+ <div class="final">
+  Hayatımın anlamı,<br><br>
+  Bu sayfa seni ikna etmek için değil.<br>
+  Kendimi dürüstçe anlatmak için.<br><br>
+  Ama hissettiğim şey gerçekti.<br>
+  Hâlâ da öyle.<br><br>
+  Eğer yine devam edelim dersen<br>
+  ben buradayım…
+ </div>
+
+ <div class="choiceBox">
+  <button class="choiceBtn yes" id="yesBtn">Deneyelim</button>
+  <button class="choiceBtn" id="noBtn">Hazır değilim</button>
+ </div>
+
+ <div class="choiceNote" id="note"></div>
+
+ <!-- SAYFA SON TARİH -->
+ <div class="endDate">Koda Basladıgım Saat 02:10 
+    Bitirdigim Saat · 04:10</div>
+</div>
+
+<!-- SİYAH PERDE -->
+<div id="overlay">
+ <div class="bigDate">18.10.2025</div>
+ <div class="bigText">EMİN OL YENİDEN BAŞLAYACAĞIZ</div>
+</div>
+
+<audio id="music" src="sarki1.mp3" loop preload="auto"></audio>
+
+<script>
+const slides=[
+ {img:"photo01.jpg",text:"Seni çok seviyorum."},
+ {img:"photo03.jpg",text:"Seni böyle kaybetmek istemezdim."},
+ {img:"photo04.jpg",text:"Sevgim sana karşı hep aynı."},
+ {img:"photo05.jpg",text:"Hayatımın anlamı sensin."},
+ {img:"photo06.jpg",text:"Her anımız ne kadar güzelmiş, bakınca anlıyorum."},
+ {img:"photo07.jpg",text:"Sen varken kötü bir an hatırlamıyorum."},
+ {img:"photo08.jpg",text:"Her şeyimdin, hâlâ da öylesin."},
+ {img:"photo09.jpg",text:"Yanındayken kendim gibiydim."},
+ {img:"photo10.jpg",text:"Gülüşün içimi hep rahatlatırdı."},
+ {img:"photo11.jpg",text:"Sen olunca her şey daha anlamlıydı."},
+ {img:"photo12.jpg",text:"Bu anların kıymetini geç anladım."},
+ {img:"photo13.jpg",text:"Keşke bazı şeyleri daha doğru yapsaydım."},
+ {img:"photo15.jpg",text:"Seni bu kadar seveceğimi bilmiyordum."},
+ {img:"photo16.jpg",text:"Hayat seninle daha güzeldi."},
+ {img:"photo17.jpg",text:"Bu fotoğraflarda hâlâ biz varız."},
+ {img:"photo18.jpg",text:"Sen yanımdayken her şey yolundaydı."},
+ {img:"photo19.jpg",text:"Bunlar sıradan anlar değildi."},
+ {img:"photo20.jpg",text:"Kalbimdeki yerin hiç değişmedi."},
+ {img:"photo21.jpg",text:"Seni kaybetmek en istemediğim şeydi."},
+ {img:"photo22.jpg",text:"Sevgim hâlâ aynı yerde."},
+ {img:"photo23.jpg",text:"Sana ait olan hislerim gerçekti."},
+ {img:"photo24.jpg",text:"Her anımız bana çok şey öğretti."},
+ {img:"photo25.jpg",text:"Sensiz olan her şey eksik."},
+ {img:"photo26.jpg",text:"Seni düşünmeden geçen bir günüm yok."},
+ {img:"photo27.jpg",text:"Her şeye rağmen… seni seviyorum."}
+];
+
+let i=-1,startX=0,musicStarted=false;
+
+const intro=document.getElementById("intro");
+const gallery=document.getElementById("gallery");
+const final=document.getElementById("final");
+const photo=document.getElementById("photo");
+const caption=document.getElementById("caption");
+const bg=document.getElementById("bg");
+const music=document.getElementById("music");
+
+/* MÜZİK */
+function startMusic(){
+ if(!musicStarted){
+  music.volume=0;
+  music.play().catch(()=>{});
+  musicStarted=true;
+  let v=0;
+  const fade=setInterval(()=>{
+   v+=0.02;
+   if(v>=1){v=1;clearInterval(fade)}
+   music.volume=v;
+  },100);
+ }
+}
+
+document.body.addEventListener("click",startMusic);
+document.body.addEventListener("touchstart",startMusic);
+
+function next(){
+ startMusic();
+ if(i===-1){intro.style.display="none";gallery.style.display="flex";}
+ if(i>=0){photo.classList.remove("active");photo.classList.add("exit");}
+ i++;
+ if(i>=slides.length){gallery.style.display="none";final.style.display="flex";return;}
+ setTimeout(()=>{
+  photo.className="photo enter";
+  photo.style.backgroundImage=`url(photos/${slides[i].img})`;
+  bg.style.backgroundImage=`url(photos/${slides[i].img})`;
+  caption.innerText=slides[i].text;
+  requestAnimationFrame(()=>photo.classList.add("active"));
+ }, i===0?600:200);
+}
+
+document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")next()});
+document.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
+document.addEventListener("touchend",e=>{if(startX-e.changedTouches[0].clientX>50)next()});
+
+/* BUTONLAR */
+const note=document.getElementById("note");
+const overlay=document.getElementById("overlay");
+
+document.getElementById("yesBtn").onclick=()=>{
+ note.innerText="Eğer deneyelim butonuna bastıysan senden bir hamle bekliyorum hanımefendi.\nBekleyeceğim.";
+ note.style.opacity=1;
+};
+
+document.getElementById("noBtn").onclick=()=>{
+ overlay.style.pointerEvents="auto";
+ overlay.style.opacity="1";
+ let v=music.volume;
+ const fadeOut=setInterval(()=>{
+  v-=0.02;
+  if(v<=0){v=0;clearInterval(fadeOut);music.pause()}
+  music.volume=v;
+ },120);
+};
+</script>
+
+</body>
+</html>
